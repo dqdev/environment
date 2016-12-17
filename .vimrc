@@ -3,6 +3,10 @@ execute pathogen#infect()
 set nocompatible
 set term=xterm
 
+scriptencoding utf-8 
+set encoding=utf-8
+set fileencoding = utf-8
+
 set et
 set ts=4
 set ru
@@ -17,6 +21,9 @@ set so=12 "Start scrolling before cursor reaches bottom
 set cursorline
 set autoindent
 set mouse=a
+
+filetype on
+au Filetype make setlocal noexpandtab
 
 set shortmess=atI
 
@@ -110,7 +117,6 @@ syntax on
 syntax enable
 set background=dark
 
-set encoding=utf-8
 set guifont=DejaVu\ Sans\ Mono\ for\ Powerline\ 13
 "set guifont=DejaVu\ Sans\ Mono\ for\ Powerline\ 9
 set t_Co=256
@@ -127,8 +133,6 @@ map <F8> :colorscheme wombat256
 map <F5> :colorscheme molokai
 map <F6> :colorscheme xoria256
 
-
-filetype on
 
 " -------------AutoComplete-----------
 function! Tab_Or_Complete()
