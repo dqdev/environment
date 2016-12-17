@@ -5,7 +5,7 @@ set term=xterm
 
 scriptencoding utf-8 
 set encoding=utf-8
-set fileencoding = utf-8
+set fileencoding=utf-8
 
 set et
 set ts=4
