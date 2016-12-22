@@ -22,6 +22,10 @@ set cursorline
 set autoindent
 set mouse=a
 
+"Without this, vim has a delay in Tmux when going
+"from insert mode to normal mode
+set ttimeoutlen=0
+
 filetype on
 au Filetype make setlocal noexpandtab
 
