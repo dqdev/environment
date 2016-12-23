@@ -21,6 +21,7 @@ apt-get -y install          \
     tlp-rdw                 \
     tp-smapi-dkms           \
     acpi-call-dkms          \
+    tmux                    \
     fontconfig-infinality
 
 apt-get -y --force-yes upgrade
@@ -33,6 +34,9 @@ tlp start
 shopt -s dotglob
 cp -r .* ~/
 rm -rf ~/.git
+
+# install vim plugins
+vim +"call dein#install()" +qall!
 
 # other files
 cp -r bin ~/

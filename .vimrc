@@ -19,9 +19,11 @@ call dein#add('Shougo/dein.vim')
 "call dein#add('Shougo/neosnippet-snippets')
 call dein#add('ctrlpvim/ctrlp.vim')
 call dein#add('scrooloose/nerdtree')
+call dein#add('scrooloose/nerdcommenter')
 call dein#add('tpope/vim-fugitive')
 call dein#add('vim-airline/vim-airline')
 call dein#add('vim-airline/vim-airline-themes')
+call dein#add('edkolev/tmuxline.vim')
 
 " You can specify revision/branch/tag.
 "call dein#add('Shougo/vimshell', { 'rev': '3787e5' })
