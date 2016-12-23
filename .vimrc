@@ -1,4 +1,45 @@
-execute pathogen#infect()
+" ---------------Package Manager-------------------
+"dein Scripts-----------------------------
+if &compatible
+  set nocompatible               " Be iMproved
+endif
+
+" Required:
+set runtimepath+=$HOME/.vim/package_manager/repos/github.com/Shougo/dein.vim
+
+" Required:
+call dein#begin($HOME.'/.vim/package_manager/')
+
+" Let dein manage dein
+" Required:
+call dein#add('Shougo/dein.vim')
+
+" Add or remove your plugins here:
+"call dein#add('Shougo/neosnippet.vim')
+"call dein#add('Shougo/neosnippet-snippets')
+call dein#add('ctrlpvim/ctrlp.vim')
+call dein#add('scrooloose/nerdtree')
+call dein#add('tpope/vim-fugitive')
+call dein#add('vim-airline/vim-airline')
+call dein#add('vim-airline/vim-airline-themes')
+
+" You can specify revision/branch/tag.
+"call dein#add('Shougo/vimshell', { 'rev': '3787e5' })
+
+" Required:
+call dein#end()
+
+" Required:
+filetype plugin indent on
+syntax enable
+
+" If you want to install not installed plugins on startup.
+"if dein#check_install()
+"  call dein#install()
+"endif
+
+"End dein Scripts-------------------------
+
 
 set nocompatible
 set term=xterm
@@ -74,12 +115,6 @@ map <leader>o :OpenBookmark
 
 "If NERDTree is only buffer left open, auto closes vim
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
-
-" --------------Window Swap-------------
-let g:windowswap_map_keys = 0 "prevent default bindings
-nnoremap <silent> <leader>yw :call WindowSwap#MarkWindowSwap()<CR>
-nnoremap <silent> <leader>pw :call WindowSwap#DoWindowSwap()<CR>
-nnoremap <silent> <leader>ww :call WindowSwap#EasyWindowSwap()<CR>
 
 " ---------------Tabline---------------
 "set guioptions-=m  "menu bar
@@ -160,7 +195,7 @@ set noshowmode
 let g:airline_powerline_fonts = 1
 let g:airline_theme='jellybeans'
 
-let g:airline_extensions = ['branch', 'ctrlp', 'windowswap']
+let g:airline_extensions = ['branch', 'ctrlp']
 
 function! AirlineInit()
     let g:airline_section_a = airline#section#create_right(['mode'])
