@@ -60,6 +60,8 @@ let g:ctrlp_custom_ignore = {
   \ 'link': 'some_bad_symbolic_links',
   \ }
 
+nmap <silent> <C-Space> :CtrlPBuffer<CR>
+
 " ---------------NERDTree---------------
 "Opens NERDTree
 map <silent><leader>n :NERDTreeToggle<CR>
@@ -96,10 +98,10 @@ nnoremap <leader>,[ :buffers<CR>:buffer<SPACE>
 
 " ---------------Splits----------------
 "Switch cursor to different buffers in splits
-nmap <silent> <A-Up> :wincmd k<CR>
-nmap <silent> <A-Down> :wincmd j<CR>
-nmap <silent> <A-Left> :wincmd h<CR>
-nmap <silent> <A-Right> :wincmd l<CR>
+nmap <silent> <C-Up> :wincmd k<CR>
+nmap <silent> <C-Down> :wincmd j<CR>
+nmap <silent> <C-Left> :wincmd h<CR>
+nmap <silent> <C-Right> :wincmd l<CR>
 
 "Move buffers left right up down with arrow keys
 nmap <silent>,<Left> :wincmd H<CR> :call MaximizeWithoutResizingQuickfix()<CR>
