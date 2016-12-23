@@ -209,6 +209,15 @@ endfunction
 autocmd User AirlineAfterInit call AirlineInit()
 
 
+"--------------Tmux Line------------------
+let g:tmuxline_preset = {
+      \'a'    : '#H',
+      \'b'    : '#P',
+      \'win'  : '#I #W',
+      \'cwin' : '#I #W',
+      \'y'    : '%a, %b %d',
+      \'z'    : '#S'}
+
 "--------------Diffing------------
 "set statusline=%-10.3n  "buffer number
 " ,2 pulls change from buffer 2
