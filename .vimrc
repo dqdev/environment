@@ -20,7 +20,7 @@ call dein#add('tpope/vim-fugitive')
 call dein#add('vim-airline/vim-airline')
 call dein#add('vim-airline/vim-airline-themes')
 call dein#add('edkolev/tmuxline.vim')
-
+call dein#add('christoomey/vim-tmux-navigator')
 " You can specify revision/branch/tag.
 "call dein#add('Shougo/vimshell', { 'rev': '3787e5' })
 
@@ -125,29 +125,33 @@ nnoremap <leader>] :buffers<CR>:buffer<SPACE>
 nnoremap <leader>[ :buffers<CR>:buffer<SPACE>
 
 " ---------------Splits----------------
-"Switch cursor to different buffers in splits
+"Split current buffer
+nmap <silent> <leader>s :vsplit<CR>
+nmap <silent> <leader>S :split<CR>
+
+"Arrows Switch cursor to different splits
 nmap <silent> <C-Up> :wincmd k<CR>
 nmap <silent> <C-Down> :wincmd j<CR>
 nmap <silent> <C-Left> :wincmd h<CR>
 nmap <silent> <C-Right> :wincmd l<CR>
 
-"Switch cursor to different buffers in splits
-nmap <silent> <leader>k :wincmd k<CR>
-nmap <silent> <leader>j :wincmd j<CR>
-nmap <silent> <leader>h :wincmd h<CR>
-nmap <silent> <leader>l :wincmd l<CR>
+"hjkl Switch cursor to different splits
+nmap <silent> <C-k> :wincmd k<CR>
+nmap <silent> <C-j> :wincmd j<CR>
+nmap <silent> <C-h> :wincmd h<CR>
+nmap <silent> <C-l> :wincmd l<CR>
 
-"Move buffers left right up down with arrow keys
+"Move split left right up down with arrow keys
 nmap <silent> <leader><Left> :wincmd H<CR>
 nmap <silent> <leader><Right> :wincmd L<CR>
 nmap <silent> <leader><Up> :wincmd K<CR>
 nmap <silent> <leader><Down> :wincmd J<CR>>
 
-"Move buffers left right up down with hlkj
-nmap <silent> <leader>H :wincmd H<CR>
-nmap <silent> <leader>L :wincmd L<CR>
-nmap <silent> <leader>K :wincmd K<CR>
-nmap <silent> <leader>J :wincmd J<CR>
+"Move split left right up down with hlkj
+nmap <silent> <leader>h :wincmd H<CR>
+nmap <silent> <leader>l :wincmd L<CR>
+nmap <silent> <leader>k :wincmd K<CR>
+nmap <silent> <leader>j :wincmd J<CR>
 
 :au VimResized * wincmd =
 
@@ -156,7 +160,6 @@ set hls                             "sets highlight search
 nmap <silent> <leader>n :nohlsearch<CR>
 syntax on       
 syntax enable
-set background=dark
 
 set guifont=DejaVu\ Sans\ Mono\ for\ Powerline\ 13
 "set guifont=DejaVu\ Sans\ Mono\ for\ Powerline\ 9
@@ -164,6 +167,8 @@ set t_Co=256
 colorscheme xoria256
 "colorscheme molokai
 "colorscheme solarized
+
+highlight Normal ctermbg=None
 
 map <F9> :colorscheme desert
 map <F10> :colorscheme desert256
