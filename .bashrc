@@ -94,3 +94,14 @@ vim()
     command vim "$@"
     stty "$STTYOPTS"
 }
+
+# If no argument provided to tmux, then it starts with curr dir as
+# session, also attaches if it already exists
+tmux() {
+    if [ $# -ge 1 ]; then
+        command tmux "$@"
+    else
+        session_name=$(basename `pwd`)
+        command tmux new-session -A -s $session_name
+    fi
+}
