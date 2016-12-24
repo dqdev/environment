@@ -33,7 +33,7 @@ call dein#end()
 "endif
 " ---------------Package Manager-------------------
 
-
+:imap <F10> <Esc>
 set nocompatible
 set term=xterm
 
@@ -121,8 +121,8 @@ set guioptions-=r  "scrollbar
 nnoremap [ :bprev<cr>
 nnoremap ] :bnext<cr>
 "Using Leader brings up list of buffers
-nnoremap <leader>,] :buffers<CR>:buffer<SPACE>
-nnoremap <leader>,[ :buffers<CR>:buffer<SPACE>
+nnoremap <leader>] :buffers<CR>:buffer<SPACE>
+nnoremap <leader>[ :buffers<CR>:buffer<SPACE>
 
 " ---------------Splits----------------
 "Switch cursor to different buffers in splits
@@ -131,22 +131,29 @@ nmap <silent> <C-Down> :wincmd j<CR>
 nmap <silent> <C-Left> :wincmd h<CR>
 nmap <silent> <C-Right> :wincmd l<CR>
 
+"Switch cursor to different buffers in splits
+nmap <silent> <leader>k :wincmd k<CR>
+nmap <silent> <leader>j :wincmd j<CR>
+nmap <silent> <leader>h :wincmd h<CR>
+nmap <silent> <leader>l :wincmd l<CR>
+
 "Move buffers left right up down with arrow keys
-nmap <silent>,<Left> :wincmd H<CR> :call MaximizeWithoutResizingQuickfix()<CR>
-nmap <silent>,<Right> :wincmd L<CR> :call MaximizeWithoutResizingQuickfix()<CR>
-nmap <silent>,<Up> :wincmd K<CR> :call MaximizeWithoutResizingQuickfix()<CR>
-nmap <silent>,<Down> :wincmd J<CR>  :call MaximizeWithoutResizingQuickfix()<CR>
+nmap <silent> <leader><Left> :wincmd H<CR>
+nmap <silent> <leader><Right> :wincmd L<CR>
+nmap <silent> <leader><Up> :wincmd K<CR>
+nmap <silent> <leader><Down> :wincmd J<CR>>
 
 "Move buffers left right up down with hlkj
-nmap <silent>,h :wincmd H<CR>
-nmap <silent>,l :wincmd L<CR>
-nmap <silent>,k :wincmd K<CR>
-nmap <silent>,j :wincmd J<CR>
+nmap <silent> <leader>H :wincmd H<CR>
+nmap <silent> <leader>L :wincmd L<CR>
+nmap <silent> <leader>K :wincmd K<CR>
+nmap <silent> <leader>J :wincmd J<CR>
 
 :au VimResized * wincmd =
 
 " ---------------Color---------------
 set hls                             "sets highlight search
+nmap <silent> <leader>n :nohlsearch<CR>
 syntax on       
 syntax enable
 set background=dark
