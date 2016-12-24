@@ -1,9 +1,5 @@
+set nocompatible 
 " ---------------Package Manager-------------------
-"dein Scripts-----------------------------
-if &compatible
-  set nocompatible               " Be iMproved
-endif
-
 " Required:
 set runtimepath+=$HOME/.vim/package_manager/repos/github.com/Shougo/dein.vim
 
@@ -31,16 +27,11 @@ call dein#add('edkolev/tmuxline.vim')
 " Required:
 call dein#end()
 
-" Required:
-filetype plugin indent on
-syntax enable
-
 " If you want to install not installed plugins on startup.
 "if dein#check_install()
 "  call dein#install()
 "endif
-
-"End dein Scripts-------------------------
+" ---------------Package Manager-------------------
 
 
 set nocompatible
@@ -69,7 +60,7 @@ set mouse=a
 "from insert mode to normal mode
 set ttimeoutlen=0
 
-filetype on
+filetype on 
 au Filetype make setlocal noexpandtab
 
 set shortmess=atI
@@ -79,7 +70,7 @@ set incsearch
 set ignorecase
 set smartcase
 
-set columns=115
+set textwidth=115
 
 set nobackup
 "set backupdir=~/.vim/backup
