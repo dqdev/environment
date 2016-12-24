@@ -33,7 +33,7 @@ call dein#end()
 "endif
 " ---------------Package Manager-------------------
 
-:imap <F10> <Esc>
+inoremap <F10> <Esc>
 set nocompatible
 set term=xterm
 
@@ -226,23 +226,21 @@ map <silent> <leader>4 :diffget 4<CR> :diffupdate<CR>
 " --------------Macros----------------
 "Ctrl-S saves
 nnoremap <silent> <C-s> :w!<CR>
-map! <silent> <C-s> <Esc>:w!<CR>a
+inoremap <silent> <C-s> <C-O>:w!<CR>
 
 " Next Tab
 nnoremap <silent> <S-Right> :tabnext<CR>
-
+      
 " Previous Tab
 nnoremap <silent> <S-Left> :tabprevious<CR>
 
 " New Tab
 nnoremap <silent> <C-t> :tabnew<CR>
 
-" New Tab
+" Close Tab
 nnoremap <silent> <C-w> :q!<CR>
 
 " Shift-Tab will shift back 1 tab
-map <S-tab> <lt><lt> 
-map! <S-tab> <BS><BS><BS><BS>
-
-nnoremap <silent> <C-[> <Esc>
+nnoremap <S-tab> <lt><lt> 
+inoremap <S-tab> <BS><BS><BS><BS>
 
