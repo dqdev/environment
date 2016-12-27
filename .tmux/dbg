@@ -1,0 +1,79 @@
+#!/usr/bin/env python 
+import re
+import sys
+import time
+import subprocess
+
+class VimProxy:
+    def __init__(self):
+        self.server_name = "DEBUG_VIEWER"
+        self.sign_name = "db_indicator"
+        self.sign_id = 1
+
+        if not self._is_vim_running():
+            self._shell_command("tmux -L default split-window -dh \
+                                'vim -R --servername DEBUG_VIEWER'")
+
+            wait_counter = 20
+            while not self._is_vim_running() and wait_counter > 0:
+                time.sleep(0.3)
+                wait_counter -= 1
+
+            if wait_counter <= 0:
+                raise Exception("No vim server")
+
+            self._send_command(":sign define db_indicator text=>> texthl=Search")
+        
+    def show(self, fname, lnum):
+        self._locate(fname, lnum)
+        self._set_sign(lnum)
+
+    def shutdown(self):
+        self._send_command(":qa!")
+
+    def _locate(self, fname, lnum):
+        self._send_command(":silent edit +%s %s" % (lnum, fname))
+
+    def _set_sign(self, lnum):
+        commands = [
+                #':norm zz',
+                ':sign unplace %s' % self.sign_id,
+                ':exe "sign place %s line=%s name=%s buffer=" . bufnr("%%")'\
+                    % (self.sign_id, lnum, self.sign_name),
+                ]
+
+        for cmd in commands:
+            self._send_command(cmd)
+
+    def _shell_command(self, cmd):
+        p = subprocess.Popen([cmd], shell=True)
+        p.wait()
+
+    def _send_command(self, vim_cmd):
+        cmd = "vim --servername " + self.server_name + " --remote-send" \
+            + " '" + vim_cmd + "<CR>'"
+        self._shell_command(cmd)
+
+    def _is_vim_running(self):
+        out = subprocess.check_output(["vim", "--serverlist"])
+        vimlist = out.split()
+        return self.server_name in vimlist
+
+#---------------------------------------------------------------------------
+
+proxy = VimProxy()
+
+pdb_check = re.compile(r"(/[^\s]+\.py)\((\d+)\)")
+
+while True:
+    line = sys.stdin.readline()
+    if line == "":
+        proxy.shutdown()
+        break
+
+    res = pdb_check.search(line)
+    if res:
+        proxy.show(res.group(1), res.group(2))
+
+
+
