@@ -64,16 +64,18 @@ class VimProxy:
 proxy = VimProxy()
 
 pdb_check = re.compile(r"(/[^\s]+\.py)\((\d+)\)")
+gdb_check = re.compile(r"(/[^\s]+\.[a-z]+):(\d+)")
 
-while True:
-    line = sys.stdin.readline()
-    if line == "":
-        proxy.shutdown()
-        break
+with open("/home/david/blah.log", "a+") as f:
+    while True:
+        line = sys.stdin.readline()
+        f.write(line)
+        if line == "":
+            proxy.shutdown()
+            break
 
-    res = pdb_check.search(line)
-    if res:
-        proxy.show(res.group(1), res.group(2))
-
+        res = pdb_check.search(line) or gdb_check.search(line)
+        if res:
+            proxy.show(res.group(1), res.group(2))
 
 

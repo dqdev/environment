@@ -59,10 +59,10 @@ shopt -s histappend
 HISTSIZE=1000
 HISTFILESIZE=2000
 
-### Alias definitions ###
-if [ -f ~/.bash_aliases ]; then
-    . ~/.bash_aliases
-fi
+### Non-Color Alias definitions ###
+# Used for tmux->vim debugging mainly, shows full path to source file
+alias gdb='gdb --fullname'
+alias l='ls -CF'
 
 ### MISC ###
 # check the window size after each command and, if necessary,
