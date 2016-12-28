@@ -99,6 +99,9 @@ let g:ctrlp_custom_ignore = {
 
 nmap <silent> <C-Space> :CtrlPBuffer<CR>
 
+"Get Ctrl-Space to work in vim
+nmap <silent> <NUL> :CtrlPBuffer<CR>
+
 " ---------------NERDTree---------------
 "Opens NERDTree
 map <silent><leader>n :NERDTreeToggle<CR>
