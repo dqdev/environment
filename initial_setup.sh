@@ -22,7 +22,8 @@ apt-get -y install          \
     tp-smapi-dkms           \
     acpi-call-dkms          \
     tmux                    \
-    fontconfig-infinality
+    fontconfig-infinality   \
+    xclip
 
 apt-get -y --force-yes upgrade
 

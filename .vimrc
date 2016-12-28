@@ -41,20 +41,23 @@ scriptencoding utf-8
 set encoding=utf-8
 set fileencoding=utf-8
 
-set et
-set ts=4
-set ru
+set expandtab
+set tabstop=4
+set ruler
 set backspace=indent,eol,start
-set sw=4                        "this is the level of autoindent, adjust to taste
+set shiftwidth=4                        "this is the level of autoindent, adjust to taste
 set showmode
 set number
-set showmatch                   "shows matching braces
+set showmatch  "shows matching braces
 set whichwrap+=h,l,<,>,[,]
-set so=12 "Start scrolling before cursor reaches bottom
+set so=12  "Start scrolling before cursor reaches bottom
 
 set cursorline
 set autoindent
 set mouse=a
+
+"Make vim yank and paste sync with system clipboard
+set clipboard=unnamedplus
 
 "Without this, vim has a delay in Tmux when going
 "from insert mode to normal mode
