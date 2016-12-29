@@ -231,7 +231,10 @@ let g:neocomplete#keyword_patterns['default'] = '\h\w*'
 inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
 
 " Auto close preview pane upon tab completion
-autocmd CompleteDone * pclose
+autocmd CompleteDone * if pumvisible() == 0|pclose|endif
+let g:airline_exclude_preview = 1
+set splitbelow
+"set completeopt-=preview
 
 " Enable omni completion.
 autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
