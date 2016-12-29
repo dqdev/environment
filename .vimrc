@@ -13,6 +13,10 @@ call dein#add('Shougo/dein.vim')
 " Add or remove your plugins here:
 "call dein#add('Shougo/neosnippet.vim')
 "call dein#add('Shougo/neosnippet-snippets')
+call dein#add('Shougo/neocomplete.vim')
+call dein#add('davidhalter/jedi-vim')
+call dein#add('SirVer/ultisnips')
+call dein#add('honza/vim-snippets')
 call dein#add('ctrlpvim/ctrlp.vim')
 call dein#add('scrooloose/nerdtree')
 call dein#add('scrooloose/nerdcommenter')
@@ -187,15 +191,112 @@ map <F6> :colorscheme xoria256
 
 
 " -------------AutoComplete-----------
-function! Tab_Or_Complete()
-  if col('.')>1 && strpart( getline('.'), col('.')-2, 3 ) =~ '^\w'
-    return "\<C-N>"
-  else
-    return "\<Tab>"
-  endif
+"  This is simple version, deprecated use version below for more features
+"function! Tab_Or_Complete()
+"  if col('.')>1 && strpart( getline('.'), col('.')-2, 3 ) =~ '^\w'
+"    return "\<C-N>"
+"  else
+"    return "\<Tab>"
+"  endif
+"endfunction
+":inoremap <Tab> <C-R>=Tab_Or_Complete()<CR>
+":set dictionary="/usr/dict/words"
+
+" -------------NeoComplete-----------
+" Disable AutoComplPop.
+let g:acp_enableAtStartup = 0
+" Use neocomplete.
+let g:neocomplete#enable_at_startup = 1
+" Use smartcase.
+let g:neocomplete#enable_smart_case = 1
+" Set minimum syntax keyword length.
+let g:neocomplete#sources#syntax#min_keyword_length = 3
+
+" Define dictionary.
+let g:neocomplete#sources#dictionary#dictionaries = {
+    \ 'default' : '',
+    \ 'vimshell': $HOME.'/.vimshell_hist',
+    \ 'scheme'  : $HOME.'/.gosh_completions'
+    \ }
+
+" Define keyword.
+if !exists('g:neocomplete#keyword_patterns')
+    let g:neocomplete#keyword_patterns = {}
+endif
+let g:neocomplete#keyword_patterns['default'] = '\h\w*'
+
+" <TAB>: completion.
+"inoremap <expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
+" <BS>: close popup and delete backword char.
+inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
+
+" Auto close preview pane upon tab completion
+autocmd CompleteDone * pclose
+
+" Enable omni completion.
+autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+
+" Use jedi-vim for python completion
+autocmd FileType python setlocal omnifunc=jedi#completions
+let g:jedi#completions_enabled = 0
+let g:jedi#auto_vim_configuration = 0
+let g:jedi#smart_auto_mappings = 0
+
+if !exists('g:neocomplete#force_omni_input_patterns')
+    let g:neocomplete#force_omni_input_patterns = {}
+endif
+let g:neocomplete#force_omni_input_patterns.python ='\%([^. \t]\.\|^\s*@\|^\s*from\s.\+import \|^\s*from \|^\s*import \)\w*'
+" alternative pattern: '\h\w*\|[^. \t]\.\w*'
+
+
+"--------------Snippets------------------
+" Get tabs to behave properly with snippets and neocomplete
+" From https://github.com/SirVer/ultisnips/issues/519 Hotschke's comments
+let g:UltiSnipsJumpForwardTrigger="<NOP>"
+let g:ulti_expand_or_jump_res = 0
+function! ExpandSnippetOrJumpForwardOrReturnTab()
+    let snippet = UltiSnips#ExpandSnippetOrJump()
+    if g:ulti_expand_or_jump_res > 0
+        return snippet
+    else
+        return "\<TAB>"
+    endif
 endfunction
-:inoremap <Tab> <C-R>=Tab_Or_Complete()<CR>
-:set dictionary="/usr/dict/words"
+
+inoremap <expr> <TAB>
+    \ pumvisible() ? "\<C-n>" :
+    \ "<C-R>=ExpandSnippetOrJumpForwardOrReturnTab()<CR>"
+
+" jump to next placeholder otherwise do nothing
+snoremap <buffer> <silent> <TAB>
+    \ <ESC>:call UltiSnips#JumpForwards()<CR>
+
+" previous menu item, jump to previous placeholder or do nothing
+let g:UltiSnipsJumpBackwordTrigger = "<NOP>"
+inoremap <expr> <S-TAB>
+    \ pumvisible() ? "\<C-p>" :
+    \ "<C-R>=UltiSnips#JumpBackwards()<CR>"
+
+" jump to previous placeholder otherwise do nothing
+snoremap <buffer> <silent> <S-TAB>
+    \ <ESC>:call UltiSnips#JumpBackwards()<CR>
+
+" expand snippet, close menu or insert newline
+let g:UltiSnipsExpandTrigger = "<NOP>"
+let g:ulti_expand_or_jump_res = 0
+inoremap <silent> <CR> <C-r>=<SID>ExpandSnippetOrReturnEmptyString()<CR>
+function! s:ExpandSnippetOrReturnEmptyString()
+    if pumvisible()
+        let snippet = UltiSnips#ExpandSnippetOrJump()
+        if g:ulti_expand_or_jump_res > 0
+            return snippet
+        else
+            return "\<C-y>\<CR>"
+        endif
+    else
+        return "\<CR>"
+    endif
+endfunction
 
 
 "--------------Status Line------------------
