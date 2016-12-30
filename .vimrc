@@ -11,10 +11,9 @@ call dein#begin($HOME.'/.vim/package_manager/')
 call dein#add('Shougo/dein.vim')
 
 " Add or remove your plugins here:
-"call dein#add('Shougo/neosnippet.vim')
-"call dein#add('Shougo/neosnippet-snippets')
-call dein#add('Shougo/neocomplete.vim')
-call dein#add('davidhalter/jedi-vim')
+"call dein#add('Shougo/neocomplete.vim')
+"call dein#add('davidhalter/jedi-vim')
+call dein#add('Valloric/youcompleteme', {'build': 'python install.py --clang-completer --system-libclang'})
 call dein#add('SirVer/ultisnips')
 call dein#add('honza/vim-snippets')
 call dein#add('ctrlpvim/ctrlp.vim')
@@ -67,7 +66,7 @@ set clipboard=unnamedplus
 "from insert mode to normal mode
 set ttimeoutlen=0
 
-filetype on 
+filetype plugin indent on 
 au Filetype make setlocal noexpandtab
 
 set shortmess=atI
@@ -202,87 +201,28 @@ map <F6> :colorscheme xoria256
 ":inoremap <Tab> <C-R>=Tab_Or_Complete()<CR>
 ":set dictionary="/usr/dict/words"
 
-" -------------NeoComplete-----------
-" Disable AutoComplPop.
-let g:acp_enableAtStartup = 0
-" Use neocomplete.
-let g:neocomplete#enable_at_startup = 1
-" Use smartcase.
-let g:neocomplete#enable_smart_case = 1
-" Set minimum syntax keyword length.
-let g:neocomplete#sources#syntax#min_keyword_length = 3
 
-" Define dictionary.
-let g:neocomplete#sources#dictionary#dictionaries = {
-    \ 'default' : '',
-    \ 'vimshell': $HOME.'/.vimshell_hist',
-    \ 'scheme'  : $HOME.'/.gosh_completions'
-    \ }
+" -------------YouCompleteMe-----------
+let g:ycm_global_ycm_extra_conf=$HOME.'/.vim/.ycm_extra_conf.py'
 
-" Define keyword.
-if !exists('g:neocomplete#keyword_patterns')
-    let g:neocomplete#keyword_patterns = {}
-endif
-let g:neocomplete#keyword_patterns['default'] = '\h\w*'
-
-" <TAB>: completion.
-"inoremap <expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
-" <BS>: close popup and delete backword char.
-inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
-
-" Auto close preview pane upon tab completion
-autocmd CompleteDone * if pumvisible() == 0|pclose|endif
+" Preview
+let g:ycm_autoclose_preview_window_after_completion = 1
 let g:airline_exclude_preview = 1
 set splitbelow
-"set completeopt-=preview
 
-" Enable omni completion.
-autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+" Goto stuff
+let g:ycm_goto_buffer_command = 'horizontal-split'
+nnoremap <leader>g :YcmCompleter GoTo<CR>
 
-" Use jedi-vim for python completion
-autocmd FileType python setlocal omnifunc=jedi#completions
-let g:jedi#completions_enabled = 0
-let g:jedi#auto_vim_configuration = 0
-let g:jedi#smart_auto_mappings = 0
-
-if !exists('g:neocomplete#force_omni_input_patterns')
-    let g:neocomplete#force_omni_input_patterns = {}
-endif
-let g:neocomplete#force_omni_input_patterns.python ='\%([^. \t]\.\|^\s*@\|^\s*from\s.\+import \|^\s*from \|^\s*import \)\w*'
-" alternative pattern: '\h\w*\|[^. \t]\.\w*'
+" Misc
+let g:ycm_confirm_extra_conf = 0
+let g:ycm_error_symbol = '>>'
+let g:ycm_warning_symbol = '>'
 
 
-"--------------Snippets------------------
-" Get tabs to behave properly with snippets and neocomplete
-" From https://github.com/SirVer/ultisnips/issues/519 Hotschke's comments
-let g:UltiSnipsJumpForwardTrigger="<NOP>"
-let g:ulti_expand_or_jump_res = 0
-function! ExpandSnippetOrJumpForwardOrReturnTab()
-    let snippet = UltiSnips#ExpandSnippetOrJump()
-    if g:ulti_expand_or_jump_res > 0
-        return snippet
-    else
-        return "\<TAB>"
-    endif
-endfunction
-
-inoremap <expr> <TAB>
-    \ pumvisible() ? "\<C-n>" :
-    \ "<C-R>=ExpandSnippetOrJumpForwardOrReturnTab()<CR>"
-
-" jump to next placeholder otherwise do nothing
-snoremap <buffer> <silent> <TAB>
-    \ <ESC>:call UltiSnips#JumpForwards()<CR>
-
-" previous menu item, jump to previous placeholder or do nothing
-let g:UltiSnipsJumpBackwordTrigger = "<NOP>"
-inoremap <expr> <S-TAB>
-    \ pumvisible() ? "\<C-p>" :
-    \ "<C-R>=UltiSnips#JumpBackwards()<CR>"
-
-" jump to previous placeholder otherwise do nothing
-snoremap <buffer> <silent> <S-TAB>
-    \ <ESC>:call UltiSnips#JumpBackwards()<CR>
+" ----------------Snippets--------------
+let g:UltiSnipsJumpForwardTrigger="<tab>"
+let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
 
 " expand snippet, close menu or insert newline
 let g:UltiSnipsExpandTrigger = "<NOP>"
@@ -301,6 +241,108 @@ function! s:ExpandSnippetOrReturnEmptyString()
     endif
 endfunction
 
+" This is not used right now in favor of YouCompleteMe
+" However we might one day come back and use this instead
+" so keeping here for now.
+" -------------NeoComplete-----------
+"" Disable AutoComplPop.
+"let g:acp_enableAtStartup = 0
+"" Use neocomplete.
+"let g:neocomplete#enable_at_startup = 1
+"" Use smartcase.
+"let g:neocomplete#enable_smart_case = 1
+"" Set minimum syntax keyword length.
+"let g:neocomplete#sources#syntax#min_keyword_length = 3
+"
+"" Define dictionary.
+"let g:neocomplete#sources#dictionary#dictionaries = {
+"    \ 'default' : '',
+"    \ 'vimshell': $HOME.'/.vimshell_hist',
+"    \ 'scheme'  : $HOME.'/.gosh_completions'
+"    \ }
+"
+"" Define keyword.
+"if !exists('g:neocomplete#keyword_patterns')
+"    let g:neocomplete#keyword_patterns = {}
+"endif
+"let g:neocomplete#keyword_patterns['default'] = '\h\w*'
+"
+"" <TAB>: completion.
+""inoremap <expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
+"" <BS>: close popup and delete backword char.
+"inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
+"
+"" Auto close preview pane upon tab completion
+"autocmd CompleteDone * if pumvisible() == 0|pclose|endif
+"let g:airline_exclude_preview = 1
+"set splitbelow
+""set completeopt-=preview
+"
+"" Enable omni completion.
+"autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+"
+"" Use jedi-vim for python completion
+"autocmd FileType python setlocal omnifunc=jedi#completions
+"let g:jedi#completions_enabled = 0
+"let g:jedi#auto_vim_configuration = 0
+"let g:jedi#smart_auto_mappings = 0
+"
+"if !exists('g:neocomplete#force_omni_input_patterns')
+"    let g:neocomplete#force_omni_input_patterns = {}
+"endif
+"let g:neocomplete#force_omni_input_patterns.python ='\%([^. \t]\.\|^\s*@\|^\s*from\s.\+import \|^\s*from \|^\s*import \)\w*'
+"" alternative pattern: '\h\w*\|[^. \t]\.\w*'
+"
+"
+""--------------Snippets------------------
+"" Get tabs to behave properly with snippets and neocomplete
+"" From https://github.com/SirVer/ultisnips/issues/519 Hotschke's comments
+"let g:UltiSnipsJumpForwardTrigger="<NOP>"
+"let g:ulti_expand_or_jump_res = 0
+"function! ExpandSnippetOrJumpForwardOrReturnTab()
+"    let snippet = UltiSnips#ExpandSnippetOrJump()
+"    if g:ulti_expand_or_jump_res > 0
+"        return snippet
+"    else
+"        return "\<TAB>"
+"    endif
+"endfunction
+"
+"inoremap <expr> <TAB>
+"    \ pumvisible() ? "\<C-n>" :
+"    \ "<C-R>=ExpandSnippetOrJumpForwardOrReturnTab()<CR>"
+"
+"" jump to next placeholder otherwise do nothing
+"snoremap <buffer> <silent> <TAB>
+"    \ <ESC>:call UltiSnips#JumpForwards()<CR>
+"
+"" previous menu item, jump to previous placeholder or do nothing
+"let g:UltiSnipsJumpBackwordTrigger = "<NOP>"
+"inoremap <expr> <S-TAB>
+"    \ pumvisible() ? "\<C-p>" :
+"    \ "<C-R>=UltiSnips#JumpBackwards()<CR>"
+"
+"" jump to previous placeholder otherwise do nothing
+"snoremap <buffer> <silent> <S-TAB>
+"    \ <ESC>:call UltiSnips#JumpBackwards()<CR>
+"
+"" expand snippet, close menu or insert newline
+"let g:UltiSnipsExpandTrigger = "<NOP>"
+"let g:ulti_expand_or_jump_res = 0
+"inoremap <silent> <CR> <C-r>=<SID>ExpandSnippetOrReturnEmptyString()<CR>
+"function! s:ExpandSnippetOrReturnEmptyString()
+"    if pumvisible()
+"        let snippet = UltiSnips#ExpandSnippetOrJump()
+"        if g:ulti_expand_or_jump_res > 0
+"            return snippet
+"        else
+"            return "\<C-y>\<CR>"
+"        endif
+"    else
+"        return "\<CR>"
+"    endif
+"endfunction
+"
 
 "--------------Status Line------------------
 set laststatus=2 "show the status line
