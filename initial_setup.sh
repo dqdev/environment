@@ -36,13 +36,18 @@ shopt -s dotglob
 cp -r .* ~/
 rm -rf ~/.git
 
-# install vim plugins
-vim +"call dein#install()" +qall!
+# powerline fonts
+cd powerline-fonts && install.sh
 
 # other files
 cp -r bin ~/
 
-# powerline fonts
-cd powerline-fonts && install.sh
+# Get dein
+cd ~ && \
+curl https://raw.githubusercontent.com/Shougo/dein.vim/master/bin/installer.sh > installer.sh && \
+sh ./installer.sh ~/.vim/package_manager
+
+# install vim plugins via dein
+vim +"call dein#install()" +qall!
 
 echo "Finished, reboot to take effect"
