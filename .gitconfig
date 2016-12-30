@@ -1,0 +1,42 @@
+[user]
+	email = dqdev@outlook.com
+[push]
+	default = simple
+[merge]
+	tool = gvimdiff
+[mergetool]
+	prompt = false
+[diff]
+	tool = gvimdiff
+[difftool]
+	prompt = false
+[alias]
+    a = add
+    b = branch
+    bc = checkout -b #this creates a new branch and switches to it
+    bd = branch -d
+    c = commit
+    ca = commit -a
+    co = checkout
+	d = difftool
+    st = status
+[core]
+	editor = vim
+	excludesfile = ~/.gitignore
+[color]
+	ui = auto
+[color "branch"]
+	current = green bold
+	local = magenta bold
+	remote = yellow bold
+[color "diff"]
+	meta = yellow bold
+	frag = magenta bold
+	old = red bold
+	new = green bold
+	whitespace = red reverse
+[color "status"]
+	added = green bold
+	changed = magenta bold
+	untracked = red bold
+
