@@ -107,7 +107,7 @@ nmap <silent> <NUL> :CtrlPBuffer<CR>
 
 " ---------------NERDTree---------------
 "Opens NERDTree
-map <silent><leader>n :NERDTreeToggle<CR>
+map <silent><leader>f :NERDTreeToggle<CR>
 
 ""Bookmark, only works in NERDTree buffer
 map <leader>b :Bookmark 
