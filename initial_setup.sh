@@ -42,12 +42,6 @@ cd powerline-fonts && install.sh
 # other files
 cp -r bin ~/
 
-# Get dein
-cd ~ && \
-curl https://raw.githubusercontent.com/Shougo/dein.vim/master/bin/installer.sh > installer.sh && \
-sh ./installer.sh ~/.vim/package_manager
-
-# install vim plugins via dein
-vim +"call dein#install()" +qall!
+./setup_vim.sh
 
 echo "Finished, reboot to take effect"
