@@ -35,6 +35,11 @@ assign [class="Gnome-terminal"] $ws2
 assign [class="Nautilus"] $ws9
 assign [class="Google-chrome"] $ws10
 
+for_window [class="Opera"] focus
+for_window [class="Gnome-terminal"] focus
+for_window [class="Nautilus"] focus
+for_window [class="Google-chrome"] focus
+
 ########## Keybindings ##########
 bindsym $mod+Shift+s exec i3lock # Easier locking
 bindsym Mod1+Tab workspace next
