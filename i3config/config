@@ -234,4 +234,5 @@ smart_gaps on
 gaps inner 5
 gaps outer 5
 
+exec xmodmap $HOME/.Xmodmap
 exec opera
