@@ -48,7 +48,5 @@ if [[ "${percent}" -le 0 ]]; then
   exit
 fi
 
-echo "${percent}%"
-echo "${percent}%"
-echo ""
+echo "<span foreground=\"#f089ad\">${percent}%</span>"
 
