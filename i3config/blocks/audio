@@ -18,5 +18,5 @@ volume=$(echo "${statusLine}" | awk -F ' ' '{print $5}' | tr -d '[]%')
 if [[ "${status}" == "on" ]]; then
   echo "<span foreground=\"#89f0cc\">${volume}%</span>"
 else
-  echo "off"
+  echo "<span foreground=\"#ca85ef\">Muted (${volume}%)</span>"
 fi
