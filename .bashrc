@@ -86,7 +86,11 @@ vim()
     # osx users, use stty -g
     local STTYOPTS="$(stty --save)"
     stty stop '' -ixoff
-    command vim "$@"
+    if [ "$TMUX" ] ; then
+        command tmux split-window -h "vim $@"
+    else
+        command vim $@
+    fi
     stty "$STTYOPTS"
 }
 

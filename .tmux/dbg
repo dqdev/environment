@@ -12,7 +12,7 @@ class VimProxy:
 
         if not self._is_vim_running():
             self._shell_command("tmux -L default split-window -dh \
-                                'vim -R --servername DEBUG_VIEWER'")
+                                'vim -R -M --servername DEBUG_VIEWER'")
 
             wait_counter = 20
             while not self._is_vim_running() and wait_counter > 0:

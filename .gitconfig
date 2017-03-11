@@ -3,7 +3,7 @@
 [push]
 	default = simple
 [merge]
-	tool = gvimdiff
+	tool = vimdiff
 [mergetool]
 	prompt = false
 [diff]
