@@ -13,8 +13,8 @@ call dein#add('Shougo/dein.vim')
 " Add or remove your plugins here:
 "call dein#add('Shougo/neocomplete.vim')
 "call dein#add('davidhalter/jedi-vim')
-call dein#add('Valloric/youcompleteme', {'build': 'python install.py --clang-completer --system-libclang'})
-call dein#add('SirVer/ultisnips')
+"call dein#add('Valloric/youcompleteme', {'build': 'python install.py --clang-completer --system-libclang'})
+"call dein#add('SirVer/ultisnips')
 call dein#add('honza/vim-snippets')
 call dein#add('ctrlpvim/ctrlp.vim')
 call dein#add('scrooloose/nerdtree')
@@ -173,6 +173,8 @@ syntax enable
 set guifont=DejaVu\ Sans\ Mono\ for\ Powerline\ 13
 "set guifont=DejaVu\ Sans\ Mono\ for\ Powerline\ 9
 set t_Co=256
+
+"colorschem apprentice
 colorscheme xoria256
 "colorscheme molokai
 "colorscheme solarized
@@ -203,43 +205,43 @@ map <F6> :colorscheme xoria256
 
 
 " -------------YouCompleteMe-----------
-let g:ycm_global_ycm_extra_conf=$HOME.'/.vim/.ycm_extra_conf.py'
-
-" Preview
-let g:ycm_autoclose_preview_window_after_completion = 1
-let g:airline_exclude_preview = 1
-set splitbelow
-
-" Goto stuff
-let g:ycm_goto_buffer_command = 'horizontal-split'
-nnoremap <leader>g :YcmCompleter GoTo<CR>
-
-" Misc
-let g:ycm_confirm_extra_conf = 0
-let g:ycm_error_symbol = '>>'
-let g:ycm_warning_symbol = '>'
-
-
-" ----------------Snippets--------------
-let g:UltiSnipsJumpForwardTrigger="<tab>"
-let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
-
-" expand snippet, close menu or insert newline
-let g:UltiSnipsExpandTrigger = "<NOP>"
-let g:ulti_expand_or_jump_res = 0
-inoremap <silent> <CR> <C-r>=<SID>ExpandSnippetOrReturnEmptyString()<CR>
-function! s:ExpandSnippetOrReturnEmptyString()
-    if pumvisible()
-        let snippet = UltiSnips#ExpandSnippetOrJump()
-        if g:ulti_expand_or_jump_res > 0
-            return snippet
-        else
-            return "\<C-y>\<CR>"
-        endif
-    else
-        return "\<CR>"
-    endif
-endfunction
+"let g:ycm_global_ycm_extra_conf=$HOME.'/.vim/.ycm_extra_conf.py'
+"
+"" Preview
+"let g:ycm_autoclose_preview_window_after_completion = 1
+"let g:airline_exclude_preview = 1
+"set splitbelow
+"
+"" Goto stuff
+"let g:ycm_goto_buffer_command = 'horizontal-split'
+"nnoremap <leader>g :YcmCompleter GoTo<CR>
+"
+"" Misc
+"let g:ycm_confirm_extra_conf = 0
+"let g:ycm_error_symbol = '>>'
+"let g:ycm_warning_symbol = '>'
+"
+"
+"" ----------------Snippets--------------
+"let g:UltiSnipsJumpForwardTrigger="<tab>"
+"let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
+"
+"" expand snippet, close menu or insert newline
+"let g:UltiSnipsExpandTrigger = "<NOP>"
+"let g:ulti_expand_or_jump_res = 0
+"inoremap <silent> <CR> <C-r>=<SID>ExpandSnippetOrReturnEmptyString()<CR>
+"function! s:ExpandSnippetOrReturnEmptyString()
+"    if pumvisible()
+"        let snippet = UltiSnips#ExpandSnippetOrJump()
+"        if g:ulti_expand_or_jump_res > 0
+"            return snippet
+"        else
+"            return "\<C-y>\<CR>"
+"        endif
+"    else
+"        return "\<CR>"
+"    endif
+"endfunction
 
 " This is not used right now in favor of YouCompleteMe
 " However we might one day come back and use this instead
@@ -381,6 +383,10 @@ map <silent> <leader>3 :diffget 3<CR> :diffupdate<CR>
 map <silent> <leader>4 :diffget 4<CR> :diffupdate<CR>
 
 " --------------Macros----------------
+" Fixes weird issue where Ctrl-S and some other stuff not
+" working in a tmux split
+silent !stty -ixon > /dev/null 2>/dev/null
+
 "Ctrl-S saves
 nnoremap <silent> <C-s> :w!<CR>
 inoremap <silent> <C-s> <C-O>:w!<CR>
