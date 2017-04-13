@@ -170,14 +170,20 @@ nmap <silent> <leader>n :nohlsearch<CR>
 syntax on       
 syntax enable
 
-set guifont=DejaVu\ Sans\ Mono\ for\ Powerline\ 13
+"set guifont=DejaVu\ Sans\ Mono\ for\ Powerline\ 13
 "set guifont=DejaVu\ Sans\ Mono\ for\ Powerline\ 9
+set guifont=Hack\ Regular\ 13
 set t_Co=256
 
-"colorschem apprentice
-colorscheme xoria256
+if (has("termguicolors"))
+    set termguicolors
+endif
+
+"colorscheme apprentice
+"colorscheme xoria256
 "colorscheme molokai
 "colorscheme solarized
+colorscheme onedark
 
 highlight Normal ctermbg=None
 
@@ -185,9 +191,9 @@ map <F9> :colorscheme desert
 map <F10> :colorscheme desert256
 
 map <F7> :colorscheme wombat
-map <F8> :colorscheme wombat256
+map <F8> :colorscheme two-firewatch
 
-map <F5> :colorscheme molokai
+map <F5> :colorscheme onedark
 map <F6> :colorscheme xoria256
 
 
@@ -352,7 +358,8 @@ set laststatus=2 "show the status line
 "Hide default input/normal mode indicator
 set noshowmode
 let g:airline_powerline_fonts = 1
-let g:airline_theme='jellybeans'
+"let g:airline_theme='jellybeans'
+let g:airline_theme='onedark'
 
 let g:airline_extensions = ['branch', 'ctrlp']
 
