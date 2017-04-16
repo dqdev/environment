@@ -19,6 +19,7 @@ call dein#add('honza/vim-snippets')
 call dein#add('ctrlpvim/ctrlp.vim')
 call dein#add('scrooloose/nerdtree')
 call dein#add('scrooloose/nerdcommenter')
+call dein#add('sheerun/vim-polyglot')
 call dein#add('tpope/vim-fugitive')
 call dein#add('vim-airline/vim-airline')
 call dein#add('vim-airline/vim-airline-themes')
@@ -75,8 +76,6 @@ set shortmess=atI
 set incsearch
 set ignorecase
 set smartcase
-
-set textwidth=115
 
 set nobackup
 "set backupdir=~/.vim/backup
