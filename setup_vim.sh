@@ -2,10 +2,10 @@
 
 # Get dein
 cd ~ && \
-curl https://raw.githubusercontent.com/Shougo/dein.vim/master/bin/installer.sh > installer.sh && \
-sh ./installer.sh ~/.vim/package_manager
+curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
 # install vim plugins via dein
-vim +"call dein#install()" +qall!
+vim +"PlugInstall" +qall!
 
 rm installer.sh

@@ -11,6 +11,7 @@ if [ -f '/Users/david.yang/code/tools/google-cloud-sdk/path.zsh.inc' ]; then . '
 if [ -f '/Users/david.yang/code/tools/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/david.yang/code/tools/google-cloud-sdk/completion.zsh.inc'; fi
 
 # Env Setup
+export PATH=$HOME/code/bin:$PATH
 export PATH=${KREW_ROOT:-$HOME/.krew}/bin:$PATH
 export PATH=/Users/david.yang/patched-php:$PATH
 
@@ -44,12 +45,23 @@ else print $0;}'"'"')'
 #export PS1=$'%B%F{yellow}%D{%-I:%M%p} %F{green}%M:%F{5}%3~%F{cyan}$(__git_ps1)%F{green}$ \e[0m'
 export PS1=$'%B%F{yellow}%D{%-I:%M%p} %F{green}%M:%F{5}$(eval "echo ${MYPS}")%F{cyan}$(__git_ps1)%F{green}$ %f'
 
+#### FZF ####
+export FZF_DEFAULT_COMMAND='fd --type file --color=always --follow --hidden --exclude .git'
+export FZF_DEFAULT_OPTS="--ansi" #enables fd color in fzf
+
+if [ -f '/usr/local/opt/fzf/shell/key-bindings.zsh' ]; then . '/usr/local/opt/fzf/shell/key-bindings.zsh'; fi
+if [ -f '/usr/local/opt/fzf/shell/completion.zsh' ]; then . '/usr/local/opt/fzf/shell/completion.zsh'; fi
+
 ### COLOR ###
-alias grep='grep --color=auto'
+#alias grep='grep --color=auto'
+alias grep='rg --column --line-number --hidden --no-heading --color=always --smart-case'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
 alias ls='gls --color=auto --group-directories-first'
 alias v='command vim'
+alias fzf='fzf-tmux'
+alias f='vim $(fzf-tmux --preview "bat --style=numbers --color=always --line-range :500 {}") -c "if !argc() | qa | endif"'
+alias cat='bat'
 
 # Need this to have Vim mappings that use Ctrl work properly
 # it does this by stopping stty when vim runs and then reloading it

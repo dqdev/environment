@@ -1,40 +1,26 @@
 set nocompatible 
 " ---------------Package Manager-------------------
-" Required:
-set runtimepath+=$HOME/.vim/package_manager/repos/github.com/Shougo/dein.vim
+call plug#begin()
 
-" Required:
-call dein#begin($HOME.'/.vim/package_manager/')
+" Make sure you use single quotes
 
-" Let dein manage dein
-" Required:
-call dein#add('Shougo/dein.vim')
+"Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
+Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
+Plug 'scrooloose/nerdcommenter', { 'on':  'NERDTreeToggle' }
+Plug 'sheerun/vim-polyglot'
+Plug 'tpope/vim-fugitive'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'edkolev/tmuxline.vim'
+Plug 'christoomey/vim-tmux-navigator'
 
-" Add or remove your plugins here:
-"call dein#add('Shougo/neocomplete.vim')
-"call dein#add('davidhalter/jedi-vim')
-"call dein#add('Valloric/youcompleteme', {'build': 'python install.py --clang-completer --system-libclang'})
-"call dein#add('SirVer/ultisnips')
-call dein#add('honza/vim-snippets')
-call dein#add('ctrlpvim/ctrlp.vim')
-call dein#add('scrooloose/nerdtree')
-call dein#add('scrooloose/nerdcommenter')
-call dein#add('sheerun/vim-polyglot')
-call dein#add('tpope/vim-fugitive')
-call dein#add('vim-airline/vim-airline')
-call dein#add('vim-airline/vim-airline-themes')
-call dein#add('edkolev/tmuxline.vim')
-call dein#add('christoomey/vim-tmux-navigator')
-" You can specify revision/branch/tag.
-"call dein#add('Shougo/vimshell', { 'rev': '3787e5' })
+" Plugin outside ~/.vim/plugged with post-update hook
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
 
-" Required:
-call dein#end()
+" Initialize plugin system
+call plug#end()
 
-" If you want to install not installed plugins on startup.
-"if dein#check_install()
-"  call dein#install()
-"endif
 " ---------------Package Manager-------------------
 
 inoremap <F10> <Esc>
@@ -60,8 +46,12 @@ set cursorline
 set autoindent
 set mouse=a
 
+if has('mouse_sgr')
+    set ttymouse=sgr
+endif
+
 "Make vim yank and paste sync with system clipboard
-set clipboard=unnamedplus
+set clipboard=unnamed
 
 "Without this, vim has a delay in Tmux when going
 "from insert mode to normal mode
@@ -90,19 +80,39 @@ set hidden
 
 let mapleader = ","
 
-" ---------------CtrlP-------------------
-let g:ctrlp_follow_symlinks = 1 "Follow symlinks without loops
-"let g:ctrlp_clear_cache_on_exit = 0 "Clear cache with <F5>
-let g:ctrlp_custom_ignore = {
-  \ 'dir':  '\v[\/]\.(git|hg|svn)$',
-  \ 'file': '\v\.(exe|so|dll)$',
-  \ 'link': 'some_bad_symbolic_links',
-  \ }
+" ---------------FZF---------------------
+" - Popup window (anchored to the bottom of the current window)
+"let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6, 'relative': v:true, 'yoffset': 1.0 } }
+let g:fzf_layout = { 'down': '40%' }
 
-nmap <silent> <C-Space> :CtrlPBuffer<CR>
+function! RipgrepFzf(query, fullscreen)
+  let command_fmt = 'rg --column --line-number --hidden --no-heading --color=always --smart-case -- %s || true'
+  let initial_command = printf(command_fmt, shellescape(a:query))
+  let reload_command = printf(command_fmt, '{q}')
+  let spec = {'options': ['--phony', '--query', a:query, '--bind', 'change:reload:'.reload_command]}
+  call fzf#vim#grep(initial_command, 1, fzf#vim#with_preview(spec), a:fullscreen)
+endfunction
+
+command! -nargs=* -bang RG call RipgrepFzf(<q-args>, <bang>0)
+
+nmap <silent> <C-P> :Files<CR>
+nmap <silent> <C-F> :BLines<CR>
+nmap <silent> <C-G> :RG<CR>
+nmap <silent> <NUL> :Buffers<CR>
+
+" ---------------CtrlP-------------------
+"let g:ctrlp_follow_symlinks = 1 "Follow symlinks without loops
+"let g:ctrlp_clear_cache_on_exit = 0 "Clear cache with <F5>
+"let g:ctrlp_custom_ignore = {
+"  \ 'dir':  '\v[\/]\.(git|hg|svn)$',
+"  \ 'file': '\v\.(exe|so|dll)$',
+"  \ 'link': 'some_bad_symbolic_links',
+"  \ }
+
+"nmap <silent> <C-Space> :CtrlPBuffer<CR>
 
 "Get Ctrl-Space to work in vim
-nmap <silent> <NUL> :CtrlPBuffer<CR>
+"nmap <silent> <NUL> :CtrlPBuffer<CR>
 
 " ---------------NERDTree---------------
 "Opens NERDTree
@@ -171,7 +181,7 @@ syntax enable
 
 "set guifont=DejaVu\ Sans\ Mono\ for\ Powerline\ 13
 "set guifont=DejaVu\ Sans\ Mono\ for\ Powerline\ 9
-set guifont=Hack\ Regular\ 13
+set guifont=Hack\ Regular\ 14
 set t_Co=256
 
 if (has("termguicolors"))
@@ -360,7 +370,7 @@ let g:airline_powerline_fonts = 1
 "let g:airline_theme='jellybeans'
 let g:airline_theme='onedark'
 
-let g:airline_extensions = ['branch', 'ctrlp']
+let g:airline_extensions = ['branch', 'fzf']
 
 function! AirlineInit()
     let g:airline_section_a = airline#section#create_right(['mode'])
@@ -412,4 +422,3 @@ nnoremap <silent> <C-w> :q!<CR>
 " Shift-Tab will shift back 1 tab
 nnoremap <S-tab> <lt><lt> 
 inoremap <S-tab> <BS><BS><BS><BS>
-
