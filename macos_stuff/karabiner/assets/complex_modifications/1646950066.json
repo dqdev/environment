@@ -1,0 +1,1 @@
+{"title":"Home and End","rules":[{"description":"Home Same As Left Control","manipulators":[{"type":"basic","from":{"modifiers":{"optional":["Home"]},"simultaneous":[{"key_code":"left_arrow"},{"key_code":"left_control"}]}}]}]}
