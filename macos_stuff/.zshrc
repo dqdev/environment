@@ -12,9 +12,15 @@ if [ -f '/Users/david.yang/code/tools/google-cloud-sdk/completion.zsh.inc' ]; th
 
 # Env Setup
 export PATH=$HOME/code/bin:$PATH
+
+# Node 14
+export PATH=/usr/local/opt/node@14/bin:$PATH
+export LDFLAGS="-L/usr/local/opt/node@14/lib"
+export CPPFLAGS="-I/usr/local/opt/node@14/include"
+
+# CSS
 export PATH=${KREW_ROOT:-$HOME/.krew}/bin:$PATH
 export PATH=/Users/david.yang/patched-php:$PATH
-
 export GOPROXY=https://proxy.golang.org,https://artifactory.cloudkitchens.internal/artifactory/api/go/go,direct
 export GOPRIVATE=css.com
 export GONOSUMDB=css.com
@@ -43,7 +49,7 @@ else print $0;}'"'"')'
 # 30 = black, 31 = red, 32 = green, 33 = yellow, 34 = blue, 35 = purple, 36 = cyan, 37 = light gray, 40-47 = background, 1 = bold, 4 = underscore, 5 = blink, 7 = inverse, 8 = concealed
 # PS1
 #export PS1=$'%B%F{yellow}%D{%-I:%M%p} %F{green}%M:%F{5}%3~%F{cyan}$(__git_ps1)%F{green}$ \e[0m'
-export PS1=$'%B%F{yellow}%D{%-I:%M%p} %F{green}%M:%F{5}$(eval "echo ${MYPS}")%F{cyan}$(__git_ps1)%F{green}$ %f'
+export PS1=$'%B%F{yellow}%D{%-I:%M%p} %F{green}%M:%F{5}$(eval "echo ${MYPS}")%F{cyan}$(__git_ps1)%F{green}$ %f%b'
 
 #### FZF ####
 export FZF_DEFAULT_COMMAND='fd --type file --color=always --follow --hidden --exclude .git'
@@ -62,6 +68,7 @@ alias v='command vim'
 alias fzf='fzf-tmux'
 alias f='vim $(fzf-tmux --preview "bat --style=numbers --color=always --line-range :500 {}") -c "if !argc() | qa | endif"'
 alias cat='bat'
+alias python="python3"
 
 # Need this to have Vim mappings that use Ctrl work properly
 # it does this by stopping stty when vim runs and then reloading it

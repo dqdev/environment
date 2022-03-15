@@ -6,17 +6,24 @@ call plug#begin()
 
 "Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
 Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
-Plug 'scrooloose/nerdcommenter', { 'on':  'NERDTreeToggle' }
+Plug 'tiagofumo/vim-nerdtree-syntax-highlight', { 'on':  'NERDTreeToggle' }
+Plug 'ryanoasis/vim-devicons'
 Plug 'sheerun/vim-polyglot'
 Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-commentary'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'edkolev/tmuxline.vim'
 Plug 'christoomey/vim-tmux-navigator'
+Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
+Plug 'ghifarit53/tokyonight-vim'
 
 " Plugin outside ~/.vim/plugged with post-update hook
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
+
+" COC
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 " Initialize plugin system
 call plug#end()
@@ -94,9 +101,9 @@ function! RipgrepFzf(query, fullscreen)
 endfunction
 
 command! -nargs=* -bang RG call RipgrepFzf(<q-args>, <bang>0)
-
 nmap <silent> <C-P> :Files<CR>
-nmap <silent> <C-F> :BLines<CR>
+nmap <silent> <C-F> :Lines<CR>
+nmap <silent> / :BLines<CR>
 nmap <silent> <C-G> :RG<CR>
 nmap <silent> <NUL> :Buffers<CR>
 
@@ -126,6 +133,49 @@ map <leader>o :OpenBookmark
 
 "If NERDTree is only buffer left open, auto closes vim
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
+
+"let g:NERDTreeFileExtensionHighlightFullName = 1
+"let g:NERDTreeExactMatchHighlightFullName = 1
+"let g:NERDTreePatternMatchHighlightFullName = 1
+let g:NERDTreeHighlightFolders = 1
+let g:NERDTreeHighlightFoldersFullName = 1 
+
+"---------------COC-------------------
+let g:coc_node_path = '/usr/local/opt/node@14/bin/node'
+set signcolumn=number
+
+" use <tab> for trigger completion and navigate to the next complete item
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~ '\s'
+endfunction
+
+let g:UltiSnipsExpandTrigger="<C-9>"
+
+inoremap <silent><expr> <Tab>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<Tab>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+" Use K to show documentation in preview window.
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  elseif (coc#rpc#ready())
+    call CocActionAsync('doHover')
+  else
+    execute '!' . &keywordprg . " " . expand('<cword>')
+  endif
+endfunction
+
+" Use `[g` and `]g` to navigate diagnostics
+" Use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
+nmap <silent> { <Plug>(coc-diagnostic-prev)
+nmap <silent> } <Plug>(coc-diagnostic-next)
+nmap <silent> <leader>d :CocList --normal diagnostics<CR>
 
 " ---------------Tabline---------------
 "set guioptions-=m  "menu bar
@@ -181,185 +231,36 @@ syntax enable
 
 "set guifont=DejaVu\ Sans\ Mono\ for\ Powerline\ 13
 "set guifont=DejaVu\ Sans\ Mono\ for\ Powerline\ 9
-set guifont=Hack\ Regular\ 14
+"set guifont=Hack\ Regular\ 14
+"set guifont = Hack\ Nerd\ Font:h11
+let g:WebDevIconsOS = 'Darwin'
+" adding to vim-airline's statusline
+let g:webdevicons_enable_airline_statusline = 1
+
 set t_Co=256
 
 if (has("termguicolors"))
     set termguicolors
 endif
 
-"colorscheme apprentice
-"colorscheme xoria256
-"colorscheme molokai
-"colorscheme solarized
-colorscheme onedark
-
 highlight Normal ctermbg=None
 
-map <F9> :colorscheme desert
-map <F10> :colorscheme desert256
-
-map <F7> :colorscheme wombat
-map <F8> :colorscheme two-firewatch
-
 map <F5> :colorscheme onedark
-map <F6> :colorscheme xoria256
 
+"---------Tokyo Night-----------
+let g:tokyonight_style = 'night' " available: night, storm
+let g:tokyonight_enable_italic = 0
+let g:tokyonight_disable_italic_comment = 1
+colorscheme tokyonight
 
-" -------------AutoComplete-----------
-"  This is simple version, deprecated use version below for more features
-"function! Tab_Or_Complete()
-"  if col('.')>1 && strpart( getline('.'), col('.')-2, 3 ) =~ '^\w'
-"    return "\<C-N>"
-"  else
-"    return "\<Tab>"
-"  endif
-"endfunction
-":inoremap <Tab> <C-R>=Tab_Or_Complete()<CR>
-":set dictionary="/usr/dict/words"
+" Make comments easier to read in tokyonight
+highlight Comment guifg=#8088ae
 
+" Make current line show up clearer in tokyonight
+highlight CursorLine guibg=#2b2c3f
 
-" -------------YouCompleteMe-----------
-"let g:ycm_global_ycm_extra_conf=$HOME.'/.vim/.ycm_extra_conf.py'
-"
-"" Preview
-"let g:ycm_autoclose_preview_window_after_completion = 1
-"let g:airline_exclude_preview = 1
-"set splitbelow
-"
-"" Goto stuff
-"let g:ycm_goto_buffer_command = 'horizontal-split'
-"nnoremap <leader>g :YcmCompleter GoTo<CR>
-"
-"" Misc
-"let g:ycm_confirm_extra_conf = 0
-"let g:ycm_error_symbol = '>>'
-"let g:ycm_warning_symbol = '>'
-"
-"
-"" ----------------Snippets--------------
-"let g:UltiSnipsJumpForwardTrigger="<tab>"
-"let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
-"
-"" expand snippet, close menu or insert newline
-"let g:UltiSnipsExpandTrigger = "<NOP>"
-"let g:ulti_expand_or_jump_res = 0
-"inoremap <silent> <CR> <C-r>=<SID>ExpandSnippetOrReturnEmptyString()<CR>
-"function! s:ExpandSnippetOrReturnEmptyString()
-"    if pumvisible()
-"        let snippet = UltiSnips#ExpandSnippetOrJump()
-"        if g:ulti_expand_or_jump_res > 0
-"            return snippet
-"        else
-"            return "\<C-y>\<CR>"
-"        endif
-"    else
-"        return "\<CR>"
-"    endif
-"endfunction
-
-" This is not used right now in favor of YouCompleteMe
-" However we might one day come back and use this instead
-" so keeping here for now.
-" -------------NeoComplete-----------
-"" Disable AutoComplPop.
-"let g:acp_enableAtStartup = 0
-"" Use neocomplete.
-"let g:neocomplete#enable_at_startup = 1
-"" Use smartcase.
-"let g:neocomplete#enable_smart_case = 1
-"" Set minimum syntax keyword length.
-"let g:neocomplete#sources#syntax#min_keyword_length = 3
-"
-"" Define dictionary.
-"let g:neocomplete#sources#dictionary#dictionaries = {
-"    \ 'default' : '',
-"    \ 'vimshell': $HOME.'/.vimshell_hist',
-"    \ 'scheme'  : $HOME.'/.gosh_completions'
-"    \ }
-"
-"" Define keyword.
-"if !exists('g:neocomplete#keyword_patterns')
-"    let g:neocomplete#keyword_patterns = {}
-"endif
-"let g:neocomplete#keyword_patterns['default'] = '\h\w*'
-"
-"" <TAB>: completion.
-""inoremap <expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
-"" <BS>: close popup and delete backword char.
-"inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
-"
-"" Auto close preview pane upon tab completion
-"autocmd CompleteDone * if pumvisible() == 0|pclose|endif
-"let g:airline_exclude_preview = 1
-"set splitbelow
-""set completeopt-=preview
-"
-"" Enable omni completion.
-"autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-"
-"" Use jedi-vim for python completion
-"autocmd FileType python setlocal omnifunc=jedi#completions
-"let g:jedi#completions_enabled = 0
-"let g:jedi#auto_vim_configuration = 0
-"let g:jedi#smart_auto_mappings = 0
-"
-"if !exists('g:neocomplete#force_omni_input_patterns')
-"    let g:neocomplete#force_omni_input_patterns = {}
-"endif
-"let g:neocomplete#force_omni_input_patterns.python ='\%([^. \t]\.\|^\s*@\|^\s*from\s.\+import \|^\s*from \|^\s*import \)\w*'
-"" alternative pattern: '\h\w*\|[^. \t]\.\w*'
-"
-"
-""--------------Snippets------------------
-"" Get tabs to behave properly with snippets and neocomplete
-"" From https://github.com/SirVer/ultisnips/issues/519 Hotschke's comments
-"let g:UltiSnipsJumpForwardTrigger="<NOP>"
-"let g:ulti_expand_or_jump_res = 0
-"function! ExpandSnippetOrJumpForwardOrReturnTab()
-"    let snippet = UltiSnips#ExpandSnippetOrJump()
-"    if g:ulti_expand_or_jump_res > 0
-"        return snippet
-"    else
-"        return "\<TAB>"
-"    endif
-"endfunction
-"
-"inoremap <expr> <TAB>
-"    \ pumvisible() ? "\<C-n>" :
-"    \ "<C-R>=ExpandSnippetOrJumpForwardOrReturnTab()<CR>"
-"
-"" jump to next placeholder otherwise do nothing
-"snoremap <buffer> <silent> <TAB>
-"    \ <ESC>:call UltiSnips#JumpForwards()<CR>
-"
-"" previous menu item, jump to previous placeholder or do nothing
-"let g:UltiSnipsJumpBackwordTrigger = "<NOP>"
-"inoremap <expr> <S-TAB>
-"    \ pumvisible() ? "\<C-p>" :
-"    \ "<C-R>=UltiSnips#JumpBackwards()<CR>"
-"
-"" jump to previous placeholder otherwise do nothing
-"snoremap <buffer> <silent> <S-TAB>
-"    \ <ESC>:call UltiSnips#JumpBackwards()<CR>
-"
-"" expand snippet, close menu or insert newline
-"let g:UltiSnipsExpandTrigger = "<NOP>"
-"let g:ulti_expand_or_jump_res = 0
-"inoremap <silent> <CR> <C-r>=<SID>ExpandSnippetOrReturnEmptyString()<CR>
-"function! s:ExpandSnippetOrReturnEmptyString()
-"    if pumvisible()
-"        let snippet = UltiSnips#ExpandSnippetOrJump()
-"        if g:ulti_expand_or_jump_res > 0
-"            return snippet
-"        else
-"            return "\<C-y>\<CR>"
-"        endif
-"    else
-"        return "\<CR>"
-"    endif
-"endfunction
-"
+" Slightly less dark background in tokyonight
+highlight Normal guibg=#20232d
 
 "--------------Status Line------------------
 set laststatus=2 "show the status line
@@ -369,8 +270,8 @@ set noshowmode
 let g:airline_powerline_fonts = 1
 "let g:airline_theme='jellybeans'
 let g:airline_theme='onedark'
-
-let g:airline_extensions = ['branch', 'fzf']
+"let g:airline_theme = "tokyonight"
+let g:airline_extensions = ['branch', 'fzf', 'coc']
 
 function! AirlineInit()
     let g:airline_section_a = airline#section#create_right(['mode'])
@@ -421,4 +322,8 @@ nnoremap <silent> <C-w> :q!<CR>
 
 " Shift-Tab will shift back 1 tab
 nnoremap <S-tab> <lt><lt> 
-inoremap <S-tab> <BS><BS><BS><BS>
+"inoremap <S-tab> <BS><BS><BS><BS>
+
+nnoremap <silent> <C-_> :Commentary<CR>
+xnoremap <silent> <C-_> :Commentary<CR>
+inoremap <silent> <C-_> <C-O>:Commentary<CR>
