@@ -4,26 +4,28 @@ call plug#begin()
 
 " Make sure you use single quotes
 
-"Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
-Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
-Plug 'tiagofumo/vim-nerdtree-syntax-highlight', { 'on':  'NERDTreeToggle' }
-Plug 'ryanoasis/vim-devicons'
 Plug 'sheerun/vim-polyglot'
 Plug 'tpope/vim-fugitive'
-Plug 'tpope/vim-commentary'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'edkolev/tmuxline.vim'
 Plug 'christoomey/vim-tmux-navigator'
-Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
 Plug 'ghifarit53/tokyonight-vim'
+
+if !&diff
+Plug 'ryanoasis/vim-devicons'
+Plug 'tpope/vim-commentary'
+Plug 'scrooloose/nerdtree', { 'on':  ['NERDTreeToggle', 'NERDTreeFind'] }
+Plug 'tiagofumo/vim-nerdtree-syntax-highlight', { 'on':  ['NERDTreeToggle', 'NERDTreeFind'] }
+Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
 
 " Plugin outside ~/.vim/plugged with post-update hook
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 
 " COC
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
+    Plug 'neoclide/coc.nvim', {'branch': 'release'}
+endif
 
 " Initialize plugin system
 call plug#end()
@@ -44,7 +46,7 @@ set ruler
 set backspace=indent,eol,start
 set shiftwidth=4                        "this is the level of autoindent, adjust to taste
 set showmode
-set number
+set number relativenumber
 set showmatch  "shows matching braces
 set whichwrap+=h,l,<,>,[,]
 set so=12  "Start scrolling before cursor reaches bottom
@@ -64,8 +66,11 @@ set clipboard=unnamed
 "from insert mode to normal mode
 set ttimeoutlen=0
 
+" TODO: Move these over to ftplugin
 filetype plugin indent on 
 au Filetype make setlocal noexpandtab
+au Filetype json set tabstop=2
+"au Filetype json set shiftwidth=2
 
 set shortmess=atI
 
@@ -90,7 +95,8 @@ let mapleader = ","
 " ---------------FZF---------------------
 " - Popup window (anchored to the bottom of the current window)
 "let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6, 'relative': v:true, 'yoffset': 1.0 } }
-let g:fzf_layout = { 'down': '40%' }
+"let g:fzf_layout = { 'down': '40%' }
+let g:fzf_layout = { 'window': 'below 30new'}
 
 function! RipgrepFzf(query, fullscreen)
   let command_fmt = 'rg --column --line-number --hidden --no-heading --color=always --smart-case -- %s || true'
@@ -100,45 +106,56 @@ function! RipgrepFzf(query, fullscreen)
   call fzf#vim#grep(initial_command, 1, fzf#vim#with_preview(spec), a:fullscreen)
 endfunction
 
+let g:fzf_action = {
+\    'ctrl-h': 'vsplit',
+\    'ctrl-x': 'split' }
+
 command! -nargs=* -bang RG call RipgrepFzf(<q-args>, <bang>0)
 nmap <silent> <C-P> :Files<CR>
 nmap <silent> <C-F> :Lines<CR>
-nmap <silent> / :BLines<CR>
+"nmap <silent> / :BLines<CR>
 nmap <silent> <C-G> :RG<CR>
 nmap <silent> <NUL> :Buffers<CR>
 
-" ---------------CtrlP-------------------
-"let g:ctrlp_follow_symlinks = 1 "Follow symlinks without loops
-"let g:ctrlp_clear_cache_on_exit = 0 "Clear cache with <F5>
-"let g:ctrlp_custom_ignore = {
-"  \ 'dir':  '\v[\/]\.(git|hg|svn)$',
-"  \ 'file': '\v\.(exe|so|dll)$',
-"  \ 'link': 'some_bad_symbolic_links',
-"  \ }
-
-"nmap <silent> <C-Space> :CtrlPBuffer<CR>
-
-"Get Ctrl-Space to work in vim
-"nmap <silent> <NUL> :CtrlPBuffer<CR>
-
 " ---------------NERDTree---------------
-"Opens NERDTree
-map <silent><leader>f :NERDTreeToggle<CR>
+function! NERDTreeIsActive()        
+  return exists("t:NERDTreeBufName") && (bufwinnr(t:NERDTreeBufName) != -1)
+endfunction
 
-""Bookmark, only works in NERDTree buffer
-map <leader>b :Bookmark 
+"Opens NERDTree and Expand/highlight current file
+map <silent><leader>f :call NERDTreeToggleInCurDir()<CR>
 
-"Open Bookmark, only works in NERDTree buffer
-map <leader>o :OpenBookmark 
+function! NERDTreeToggleInCurDir()
+  " If NERDTree is open in the current buffer
+  if NERDTreeIsActive()
+    exe ":NERDTreeClose"
+  else
+    exe ":NERDTreeFind"
+  endif
+endfunction
+
+"If NERDTree is open, always highlight current focused buffer's file
+
+" calls NERDTreeFind iff NERDTree is active, current window contains a modifiable file, and we're not in vimdiff
+function! SyncTree()
+  if NERDTreeIsActive() && (bufwinnr('%') != bufwinnr(t:NERDTreeBufName)) && strlen(expand('%')) > 0 && !&diff
+    NERDTreeFind
+    wincmd p
+  endif
+endfunction
+
+autocmd BufEnter * call SyncTree()
+
 
 "If NERDTree is only buffer left open, auto closes vim
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
+autocmd bufenter * if (winnr("$") == 1 && NERDTreeIsActive()) | q | endif
 
 "let g:NERDTreeFileExtensionHighlightFullName = 1
 "let g:NERDTreeExactMatchHighlightFullName = 1
 "let g:NERDTreePatternMatchHighlightFullName = 1
 let g:NERDTreeHighlightFolders = 1
 let g:NERDTreeHighlightFoldersFullName = 1 
+let g:NERDTreeLimitedSyntax = 1
 
 "---------------COC-------------------
 let g:coc_node_path = '/usr/local/opt/node@14/bin/node'
@@ -221,7 +238,25 @@ nmap <silent> <leader>l :wincmd L<CR>
 nmap <silent> <leader>k :wincmd K<CR>
 nmap <silent> <leader>j :wincmd J<CR>
 
+"Auto equally resizes splits when new ones are created
 :au VimResized * wincmd =
+
+"Maximizes current focused split
+function! Zoom_toggle() abort
+  if 1 == winnr('$')
+    return
+  endif
+  let restore_cmd = winrestcmd()
+  wincmd |
+  wincmd _
+  " If the layout did not change, it's a toggle (un-zoom).
+  if restore_cmd ==# winrestcmd()
+    exe t:zoom_restore
+  else
+    let t:zoom_restore = restore_cmd
+  endif
+endfunction
+nnoremap <silent> <leader>z :call Zoom_toggle()<CR>
 
 " ---------------Color---------------
 set hls                             "sets highlight search
@@ -253,14 +288,20 @@ let g:tokyonight_enable_italic = 0
 let g:tokyonight_disable_italic_comment = 1
 colorscheme tokyonight
 
-" Make comments easier to read in tokyonight
+" Make comments easier to read
 highlight Comment guifg=#8088ae
 
-" Make current line show up clearer in tokyonight
-highlight CursorLine guibg=#2b2c3f
+" Make current line show up clearer
+highlight CursorLine guibg=#2F3146
 
-" Slightly less dark background in tokyonight
+" Slightly less dark background
 highlight Normal guibg=#20232d
+highlight EndOfBuffer guibg=#20232d
+
+" Make json quotes/commas more readable
+"highlight link jsonQuote Fg 
+"highlight link jsonNoise Fg 
+highlight Grey guifg=#8088ae
 
 "--------------Status Line------------------
 set laststatus=2 "show the status line
@@ -270,7 +311,7 @@ set noshowmode
 let g:airline_powerline_fonts = 1
 "let g:airline_theme='jellybeans'
 let g:airline_theme='onedark'
-"let g:airline_theme = "tokyonight"
+"let g:airline_theme = 'tokyonight'
 let g:airline_extensions = ['branch', 'fzf', 'coc']
 
 function! AirlineInit()

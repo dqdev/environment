@@ -4,37 +4,33 @@ setopt PROMPT_SUBST
 bindkey "^[[H" beginning-of-line
 bindkey "^[[F" end-of-line
 
-# The next line updates PATH for the Google Cloud SDK.
-if [ -f '/Users/david.yang/code/tools/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/david.yang/code/tools/google-cloud-sdk/path.zsh.inc'; fi
-
-# The next line enables shell command completion for gcloud.
-if [ -f '/Users/david.yang/code/tools/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/david.yang/code/tools/google-cloud-sdk/completion.zsh.inc'; fi
+export EDITOR=vim
 
 # Env Setup
 export PATH=$HOME/code/bin:$PATH
+
+# ------------ CSS ---------------#
 
 # Node 14
 export PATH=/usr/local/opt/node@14/bin:$PATH
 export LDFLAGS="-L/usr/local/opt/node@14/lib"
 export CPPFLAGS="-I/usr/local/opt/node@14/include"
 
-# CSS
-export PATH=${KREW_ROOT:-$HOME/.krew}/bin:$PATH
-export PATH=/Users/david.yang/patched-php:$PATH
-export GOPROXY=https://proxy.golang.org,https://artifactory.cloudkitchens.internal/artifactory/api/go/go,direct
-export GOPRIVATE=css.com
-export GONOSUMDB=css.com
-export GONOPROXY=none
-export JAVA_HOME=/usr/local/lib/java/Contents/Home
-
 # MiniKube Docker setup
 # export DOCKER_TLS_VERIFY="1"
-export DOCKER_HOST="tcp://192.168.64.2:2376"
-export DOCKER_CERT_PATH="/Users/david.yang/.minikube/certs"
-export MINIKUBE_ACTIVE_DOCKERD="minikube"
+# export DOCKER_HOST="tcp://192.168.64.3:2376"
+# export DOCKER_CERT_PATH="/Users/david.yang/.minikube/certs"
+# export MINIKUBE_ACTIVE_DOCKERD="minikube"
 
 # To point your shell to minikube's docker-daemon, run:
-eval $(minikube -p minikube docker-env)
+# eval $(minikube -p minikube docker-env)
+
+# kubectl auto complete
+# autoload -Uz compinit
+# compinit
+# source ~/code/bin/kubectl_completion
+
+# ------------ End CSS ---------------#
 
 #setup git stuff on prompt
 source ~/code/bin/git-prompt.sh
